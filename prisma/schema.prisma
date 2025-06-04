@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+// Further reading:
+// https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+// https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL") // uses connection pooling
+}
+
+// Necessary for Next auth
+model accounts {
+  id                       String  @id @default(nanoid())
+  user_id                  String
+  type                     String
+  provider                 String
+  provider_account_id      String
+  refresh_token            String? // @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+
+  @@unique([provider, provider_account_id])
+}
+
+model sessions {
+  id            String   @id @default(nanoid())
+  session_token String   @unique
+  user_id       String
+  expires       DateTime
+}
+
+model users {
+  id             String    @id @default(nanoid())
+  name           String?
+  email          String?   @unique
+  email_verified DateTime?
+  image          String?
+  is_setup       Boolean   @default(false)
+}
+
+model verification_tokens {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model food {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  notes       String
+  amount      Float
+  unit        String
+  carbs       Float     @default(0.0)
+  proteins    Float     @default(0.0)
+  fats        Float     @default(0.0)
+  price       Float     @default(0.0)
+  user_id     String
+  is_hidden   Boolean   @default(false)
+  created_at  DateTime  @default(now())
+  hidden_at   DateTime?
+
+  @@index([user_id])
+}
+
+model meals {
+  id            Int       @id @default(autoincrement())
+  name          String
+  carbs_goal    Float     @default(0.0)
+  proteins_goal Float     @default(0.0)
+  fats_goal     Float     @default(0.0)
+  user_id       String
+  position      Int       @default(autoincrement())
+  is_hidden     Boolean   @default(false)
+  created_at    DateTime  @default(now())
+  hidden_at     DateTime?
+
+  @@index([user_id])
+}
+
+model meal_intakes {
+  id         Int      @id @default(autoincrement())
+  user_id    String
+  meal_id    Int
+  food_id    Int
+  amount     Float    @default(0.0)
+  for_date   DateTime @default(now())
+  created_at DateTime @default(now())
+
+  @@index([user_id])
+}
