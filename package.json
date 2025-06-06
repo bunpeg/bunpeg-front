@@ -45,7 +45,7 @@
     "@trpc/react-query": "11.0.0-rc.502",
     "@trpc/server": "11.0.0-rc.502",
     "@vercel/blob": "0.23.4",
-    "@vercel/postgres": "0.7.2",
+    "@vercel/postgres": "0.10.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
@@ -91,7 +91,8 @@
     "react-email": "3.0.1",
     "tailwindcss": "4.1.8",
     "tailwindcss-animate": "1.0.7",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "typescript-eslint": "8.32.1"
   },
   "ct3aMetadata": {
     "initVersion": "7.37.0"

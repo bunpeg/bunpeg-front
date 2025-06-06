@@ -3,6 +3,8 @@ import { JetBrains_Mono } from 'next/font/google';
 
 import { Toaster } from '@/ui';
 import '@/styles/globals.css';
+import ClientProviders from '@/components/client-providers';
+import { getServerAuthSession } from '@/server/auth';
 
 export const metadata: Metadata = {
   title: 'Meal tracker',
@@ -12,15 +14,18 @@ export const metadata: Metadata = {
 
 const font = JetBrains_Mono({ subsets: ['latin'] });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await getServerAuthSession();
   return (
     <html lang="en">
       <body className={font.className}>
-        {children}
-        <Toaster />
-        {/*{process.env.NODE_ENV === 'development' && <ScreenSize />}*/}
+        <ClientProviders session={session}>
+          {children}
+          <Toaster />
+          {/*{process.env.NODE_ENV === 'development' && <ScreenSize />}*/}
+        </ClientProviders>
       </body>
     </html>
   );

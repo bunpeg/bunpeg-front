@@ -8,13 +8,7 @@ export const env = createEnv({
    */
   server: {
     POSTGRES_URL: z.string().url(),
-    POSTGRES_PRISMA_URL: z.string().url(),
-    POSTGRES_URL_NO_SSL: z.string().url(),
-    POSTGRES_URL_NON_POOLING: z.string().url(),
-    POSTGRES_USER: z.string(),
-    POSTGRES_HOST: z.string(),
-    POSTGRES_PASSWORD: z.string(),
-    POSTGRES_DATABASE: z.string(),
+    BUNPEG_API: z.string().url(),
 
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
@@ -32,9 +26,6 @@ export const env = createEnv({
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url()
     ),
-
-    RESEND_API_KEY: z.string(),
-    RESEND_FALLBACK_EMAIL: z.string().email(),
   },
 
   /**
@@ -52,22 +43,13 @@ export const env = createEnv({
    */
   runtimeEnv: {
     POSTGRES_URL: process.env.POSTGRES_URL,
-    POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
-    POSTGRES_URL_NO_SSL: process.env.POSTGRES_URL_NO_SSL,
-    POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
-    POSTGRES_USER: process.env.POSTGRES_USER,
-    POSTGRES_HOST: process.env.POSTGRES_HOST,
-    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
-    POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+    BUNPEG_API: process.env.BUNPEG_API,
 
     NODE_ENV: process.env.NODE_ENV,
     VERCEL_ENV: process.env.VERCEL_ENV,
 
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    RESEND_FALLBACK_EMAIL: process.env.RESEND_FALLBACK_EMAIL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
