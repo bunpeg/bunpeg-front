@@ -11,6 +11,7 @@ import {
   ScissorsLineDashedIcon,
   TerminalIcon,
   Trash2Icon,
+  ExternalLinkIcon,
 } from 'lucide-react';
 
 import { api } from '@/trpc/react';
@@ -138,7 +139,7 @@ export default function FilesList() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild disabled={isPending}>
                     <Button size="icon" variant="ghost">
-                      {isPending ? <Loader size="icon" color="black" /> : <TerminalIcon className="size-4" />}
+                      <TerminalIcon className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -212,8 +213,14 @@ export default function FilesList() {
                       Extract audio
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
+                    <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
+                      <DropdownMenuItem disabled={isPending}>
+                        <ExternalLinkIcon className="size-4 mr-2" />
+                        Preview
+                      </DropdownMenuItem>
+                    </Link>
                     <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/download/${file.id}`} target="_blank">
-                      <DropdownMenuItem onClick={() => deleteFile(file.id)} disabled={isPending}>
+                      <DropdownMenuItem disabled={isPending}>
                         <CloudDownloadIcon className="size-4 mr-2" />
                         Download
                       </DropdownMenuItem>
