@@ -7,7 +7,6 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    POSTGRES_URL: z.string().url(),
     BUNPEG_API: z.string().url(),
 
     NODE_ENV: z
@@ -43,7 +42,6 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    POSTGRES_URL: process.env.POSTGRES_URL,
     BUNPEG_API: process.env.BUNPEG_API,
     NEXT_PUBLIC_BUNPEG_API: process.env.NEXT_PUBLIC_BUNPEG_API,
 
