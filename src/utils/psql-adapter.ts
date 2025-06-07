@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import type { Adapter } from 'next-auth/adapters';
 import { sql } from '@vercel/postgres';
 import { nanoid } from 'nanoid';

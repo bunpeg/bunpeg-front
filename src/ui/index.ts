@@ -25,7 +25,6 @@ export * from './input-with-label';
 export * from './kbd';
 export * from './label';
 export * from './loader';
-export * from './logos';
 export * from './navigation-menu';
 export * from './pagination';
 export * from './period-input';

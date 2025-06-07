@@ -1,8 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
-import { setupRouter } from '@/server/api/routers/setup';
-import { mealsRouter } from '@/server/api/routers/meals';
-import { intakeRouter } from '@/server/api/routers/intake';
-import { foodRouter } from '@/server/api/routers/food';
+import { files } from '@/server/api/routers/files';
+import { tasks } from '@/server/api/routers/tasks';
 
 /**
  * This is the primary router for your server.
@@ -10,10 +8,8 @@ import { foodRouter } from '@/server/api/routers/food';
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  setup: setupRouter,
-  meals: mealsRouter,
-  food: foodRouter,
-  intake: intakeRouter,
+  files,
+  tasks
 });
 
 // export type definition of API

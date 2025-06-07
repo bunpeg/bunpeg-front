@@ -35,6 +35,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_BUNPEG_API: z.string().url(),
   },
 
   /**
@@ -44,6 +45,7 @@ export const env = createEnv({
   runtimeEnv: {
     POSTGRES_URL: process.env.POSTGRES_URL,
     BUNPEG_API: process.env.BUNPEG_API,
+    NEXT_PUBLIC_BUNPEG_API: process.env.NEXT_PUBLIC_BUNPEG_API,
 
     NODE_ENV: process.env.NODE_ENV,
     VERCEL_ENV: process.env.VERCEL_ENV,

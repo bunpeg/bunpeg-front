@@ -13,9 +13,9 @@ interface Props {
 export default function ClientProviders({ children, session }: Props) {
   return (
     <TRPCReactProvider>
-      <SessionProvider session={session}>
+      {/*<SessionProvider session={session}>*/}
         {children}
-      </SessionProvider>
+      {/*</SessionProvider>*/}
     </TRPCReactProvider>
   );
 }

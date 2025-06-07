@@ -2,9 +2,10 @@
 
 import * as React from 'react';
 import { Toaster as Sonner, toast as sonnerToast } from 'sonner';
-import { Button } from './button';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { XIcon } from 'lucide-react';
+
+import { Button } from './button';
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
@@ -58,12 +59,14 @@ function Toast(props: ToastProps & { destructive?: boolean }) {
       <div className="flex flex-col gap-0.5">
         <p
           data-variant={destructive ? 'destructive' : 'neutral'}
-          className="text-sm font-medium text-gray-900 data-[variant=destructive]:text-red-600">
+          className="text-sm font-medium text-gray-900 data-[variant=destructive]:text-red-600"
+        >
           {title}
         </p>
         <p
           data-variant={destructive ? 'destructive' : 'neutral'}
-          className="text-sm text-muted-foreground data-[variant=destructive]:text-red-600">
+          className="text-sm text-muted-foreground data-[variant=destructive]:text-red-600"
+        >
           {description}
         </p>
       </div>

@@ -85,12 +85,12 @@ export function FileInput(props: Props) {
             });
           }
 
-          if (error === 'max-size') {
-            toast('File size is too big', {
-              description: 'File size should be up to 4.5MB',
-              duration: 5000,
-            });
-          }
+          // if (error === 'max-size') {
+          //   toast('File size is too big', {
+          //     description: 'File size should be up to 4.5MB',
+          //     duration: 5000,
+          //   });
+          // }
 
           __clearFileInput();
           return;
@@ -272,11 +272,12 @@ export function validateFile(file: File) {
     return { ok: false as const, error: 'system-file' as const };
   }
 
+  // TODO: disabled for now
   // check file size to be less than 4.5MB
-  const maxSize = 4.5 * 1024 * 1024;
-  if (file.size > maxSize) {
-    return { ok: false as const, error: 'max-size' as const };
-  }
+  // const maxSize = 4.5 * 1024 * 1024;
+  // if (file.size > maxSize) {
+  //   return { ok: false as const, error: 'max-size' as const };
+  // }
 
   return { ok: true as const, error: null };
 }
