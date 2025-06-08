@@ -1,26 +1,82 @@
-// import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import {
+  CpuIcon,
+  FingerprintIcon, ListIcon,
+  PencilIcon,
+  ServerOffIcon,
+  Settings2Icon,
+  SparklesIcon,
+  ZapIcon,
+} from 'lucide-react';
 
-// import { getServerAuthSession } from '@/server/auth';
-import FilesList from '@/app/files-list';
-import TasksList from '@/app/tasks-list';
+import { Button } from '@/ui';
 
 export default async function Home() {
-  // const session = await getServerAuthSession();
-  //
-  // if (session?.user) {
-  //   redirect('/intake');
-  // }
-
   return (
-    <section className="w-screen h-screen flex flex-col pt-10 px-4">
-      <div className="mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold  text-center">Files</h1>
-          <FilesList />
+    <section className="py-12 md:py-20">
+      <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
+        <div className="relative z-10 mx-auto max-w-2xl space-y-6 text-center md:space-y-12">
+          <h2 className="text-balance text-4xl font-medium lg:text-6xl ">Bunpeg</h2>
+          <p>
+            Bunpeg is a service for performing FFmpeg operations via HTTP.{' '}
+            You can upload media files (video or audio), run FFmpeg commands on them, and download the results.
+          </p>
+          <Link href="/playground">
+            <Button variant="default">Check the playground</Button>
+          </Link>
         </div>
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold  text-center">Tasks</h1>
-          <TasksList />
+        <div className="relative mx-auto grid gap-4 md:gap-1 max-w-4xl *:p-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-3 border">
+            <div className="flex items-center gap-2">
+              <ServerOffIcon className="size-4" />
+              <h3 className="text-sm font-medium">Serverless</h3>
+            </div>
+            <p className="text-sm">You can now use FFmpeg from any serverless environment.</p>
+          </div>
+
+          <div className="space-y-2 border relative">
+            <div className="flex items-center gap-2">
+              <ListIcon className="size-4" />
+              <h3 className="text-sm font-medium">Granular</h3>
+            </div>
+            <p className="text-sm">All operations run sequentially in a queue.</p>
+          </div>
+
+          <div className="space-y-2 border relative">
+            <div className="flex items-center gap-2">
+              <FingerprintIcon className="size-4" />
+              <h3 className="text-sm font-medium">Security</h3>
+            </div>
+            <p className="text-sm">It supports an helping developers businesses.</p>
+            <sub className="pl-10 absolute bottom-4 left-0">(placeholder)</sub>
+          </div>
+
+          <div className="space-y-2 border relative">
+            <div className="flex items-center gap-2">
+              <PencilIcon className="size-4" />
+              <h3 className="text-sm font-medium">Customization</h3>
+            </div>
+            <p className="text-sm">It supports helping developers and businesses innovate.</p>
+            <sub className="pl-10 absolute bottom-4 left-0">(placeholder)</sub>
+          </div>
+
+          <div className="space-y-2 border relative">
+            <div className="flex items-center gap-2">
+              <Settings2Icon className="size-4" />
+              <h3 className="text-sm font-medium">Control</h3>
+            </div>
+            <p className="text-sm">It supports helping developers and businesses innovate.</p>
+            <sub className="pl-10 absolute bottom-4 left-0">(placeholder)</sub>
+          </div>
+
+          <div className="space-y-2 border relative">
+            <div className="flex items-center gap-2">
+              <SparklesIcon className="size-4" />
+              <h3 className="text-sm font-medium">Docs for AI</h3>
+            </div>
+            <p className="text-sm">You can download and feed our docs to our AI of choice.</p>
+            <sub className="pl-10 absolute bottom-4 left-0">(placeholder)</sub>
+          </div>
         </div>
       </div>
     </section>

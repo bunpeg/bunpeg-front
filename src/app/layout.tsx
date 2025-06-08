@@ -17,7 +17,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={font.className}>
+      <body className={`${font.className} text-primary selection:text-primary selection:bg-blue-100`}>
         <ClientProviders session={null}>
           {children}
           <Toaster />

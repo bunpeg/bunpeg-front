@@ -425,7 +425,7 @@ function UploadButton() {
 
   return (
     <>
-      <Button size="xs" variant="black" onClick={openFilePicker} disabled={loading}>
+      <Button size="xs" onClick={openFilePicker} disabled={loading}>
         {loading ? <Loader size="xs" color="white" /> : 'Upload'}
       </Button>
       <input ref={fileInputRef} type="file" accept="video/*" className="hidden" onChange={handleChange} disabled={loading} />
