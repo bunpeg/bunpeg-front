@@ -105,9 +105,9 @@ export default function FilesList() {
         body: JSON.stringify({
           fileId: params.fileId,
           operations: [
-            { type: 'trim', start: 0, duration: 10, outputFormat: parts.at(-1)! },
-            { type: 'trim-end', duration: 5, outputFormat: parts.at(-1)! },
-            { type: 'transcode', format: 'mp4' },
+            { type: 'trim', start: 0, duration: 200, outputFormat: parts.at(-1)! },
+            { type: 'trim-end', duration: 50, outputFormat: parts.at(-1)! },
+            { type: 'transcode', format: 'mkv' },
           ],
         }),
       });
