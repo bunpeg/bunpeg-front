@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -11,15 +13,15 @@
   --color-popover-foreground: hsl(20 14.3% 4.1%);
   /*--color-primary:  oklch(0.50 0.12 243);*/
   /* deep burgundy */
-  /*--color-primary:  #301728;*/
+  --color-primary:  #301728;
   /* burgundy */
   /*--color-primary:  #3F1521;*/
   /* porsche green */
   /*--color-primary:  #184A4C;*/
   /* deep-blue */
-  --color-primary:  #13273F;
+  /*--color-primary:  #13273F;*/
   /*--color-primary-foreground: oklch(0.50 0.12 243);*/
-  --color-primary-foreground: #13273F;;
+  --color-primary-foreground: #3F1521;
   --color-secondary: hsl(60 4.8% 95.9%);
   --color-secondary-foreground: hsl(24 9.8% 10%);
   --color-muted: hsl(60 4.8% 95.9%);
@@ -31,7 +33,7 @@
   --color-border: hsl(20 5.9% 90%);
   --color-input: hsl(20 5.9% 90%);
   /*--color-ring: oklch(0.50 0.12 243);*/
-  --color-ring: #13273F;;
+  --color-ring: #3F1521;
   --radius: 0.5rem;
 }
 

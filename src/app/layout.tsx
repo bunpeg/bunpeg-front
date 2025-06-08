@@ -1,5 +1,6 @@
 import { type Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
+import { RootProvider } from 'fumadocs-ui/provider';
 
 import { Toaster } from '@/ui';
 import ClientProviders from '@/components/client-providers';
@@ -16,13 +17,15 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${font.className} text-primary selection:text-primary selection:bg-blue-100`}>
-        <ClientProviders session={null}>
-          {children}
-          <Toaster />
-          {/*{process.env.NODE_ENV === 'development' && <ScreenSize />}*/}
-        </ClientProviders>
+        <RootProvider>
+          <ClientProviders session={null}>
+            {children}
+            <Toaster />
+            {/*{process.env.NODE_ENV === 'development' && <ScreenSize />}*/}
+          </ClientProviders>
+        </RootProvider>
       </body>
     </html>
   );

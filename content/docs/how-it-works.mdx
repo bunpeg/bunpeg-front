@@ -1,0 +1,13 @@
+---
+title: How it works
+description: A breakdown of the service
+---
+
+### The basics
+Right now the service has no authentication of any kind (it's a priority for me), but besides that, it works
+pretty similar to other services you might have encountered. You can upload a file, up to 500MB for now, for which
+you will get a file id in the form of a nanoid.
+
+After this you can call the operation endpoints to schedule operations to be performed on said file.
+It currently has a severely limited set of operations, but I'm working to expand it.
+You can also chain operations by using the `/chain` endpoint.
