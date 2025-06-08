@@ -4,14 +4,15 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import {
+  ChevronsRight,
   CloudDownloadIcon,
+  ExternalLinkIcon,
   FileAudioIcon,
   FileVideo,
   ImagePlayIcon,
   ScissorsLineDashedIcon,
   TerminalIcon,
   Trash2Icon,
-  ExternalLinkIcon,
 } from 'lucide-react';
 
 import { api } from '@/trpc/react';
@@ -89,6 +90,35 @@ export default function FilesList() {
     onSuccess,
   })
 
+  const { mutate: chain, isPending: isChaining } = useMutation<void, Error, { fileId: string }, unknown>({
+    mutationFn: async (params) => {
+      const file = files.find((__file) => __file.id === params.fileId);
+      if (!file) throw new Error('Unable to find file');
+
+      const meta = file.metadata ? JSON.parse(file.metadata) : {};
+      if (Number.isNaN(Number(meta.duration))) return;
+
+      const parts = file.file_name.split('.');
+
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/chain`, {
+        method: 'POST',
+        body: JSON.stringify({
+          fileId: params.fileId,
+          operations: [
+            { type: 'trim', start: 0, duration: 10, outputFormat: parts.at(-1)! },
+            { type: 'trim-end', duration: 5, outputFormat: parts.at(-1)! },
+            { type: 'transcode', format: 'mp4' },
+          ],
+        }),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create trim-end task');
+      }
+    },
+    onSuccess,
+  })
+
   const { mutate: deleteFile, isPending: isDeleting } = useMutation<void, Error, string, unknown>({
     mutationFn: async (fileId) => {
       const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/delete/${fileId}`, {
@@ -102,7 +132,7 @@ export default function FilesList() {
     onSuccess,
   })
 
-  const isPending = isDeleting || isTranscoding || isTrimming || isCutting;
+  const isPending = isDeleting || isTranscoding || isTrimming || isCutting || isChaining;
 
   return (
     <Table>
@@ -186,14 +216,11 @@ export default function FilesList() {
                       }}
                     >
                       <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
-                      From end (with trim)
+                      From end (trim)
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       disabled={isPending}
                       onClick={() => {
-                        if (!file.metadata) return;
-
-                        const meta = JSON.parse(file.metadata);
                         if (Number.isNaN(Number(meta.duration))) return;
 
                         const parts = file.file_name.split('.');
@@ -205,12 +232,17 @@ export default function FilesList() {
                       }}
                     >
                       <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
-                      From end (with cut-end [slower])
+                      From end (trim-end)
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem disabled={isPending}>
                       <FileAudioIcon className="size-4 mr-2" />
                       Extract audio
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
+                      <ChevronsRight className="size-4 mr-2" />
+                      Chain operations
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
