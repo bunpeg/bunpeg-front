@@ -7,18 +7,23 @@ export default async function Home() {
   return (
     <section className="py-12 md:py-20">
       <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
-        <div className="relative z-10 mx-auto max-w-2xl flex flex-col items-center text-center md:space-y-12">
+        <div className="relative z-10 mx-auto max-w-2xl flex flex-col items-center text-center space-y-12">
           <h2 className="text-balance text-4xl font-medium lg:text-6xl ">Bunpeg</h2>
           <p>
             Bunpeg is a service for performing FFmpeg operations via http.{' '}
             You can upload media files (video or audio), run FFmpeg commands on them, and download the results.
           </p>
-          <div className="flex items-center gap-2">
-            <Link href="/playground">
-              <Button variant="default">Check the playground</Button>
-            </Link>
+          <div className="hidden md:flex items-center gap-2">
             <Link href="/docs">
-              <Button variant="outline">Read the docs</Button>
+              <Button variant="default">Read the docs</Button>
+            </Link>
+            <Link href="/playground">
+              <Button variant="outline">Check the playground</Button>
+            </Link>
+          </div>
+          <div className="flex md:hidden items-center gap-2">
+            <Link href="/docs">
+              <Button variant="default">Read the docs</Button>
             </Link>
           </div>
         </div>
