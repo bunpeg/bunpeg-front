@@ -13,13 +13,13 @@
   --color-popover-foreground: hsl(20 14.3% 4.1%);
   /*--color-primary:  oklch(0.50 0.12 243);*/
   /* deep burgundy */
-  --color-primary:  #301728;
+  --color-primary: #301728;
   /* burgundy */
-  /*--color-primary:  #3F1521;*/
+  /*--color-primary: #3F1521;*/
   /* porsche green */
-  /*--color-primary:  #184A4C;*/
+  /*--color-primary: #184A4C;*/
   /* deep-blue */
-  /*--color-primary:  #13273F;*/
+  /*--color-primary: #13273F;*/
   /*--color-primary-foreground: oklch(0.50 0.12 243);*/
   --color-primary-foreground: #3F1521;
   --color-secondary: hsl(60 4.8% 95.9%);
