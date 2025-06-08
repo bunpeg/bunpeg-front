@@ -37,6 +37,43 @@
   --radius: 0.5rem;
 }
 
+:root.dark {
+  --color-background: #180c14;
+  --color-foreground: hsl(20 14.3% 4.1%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(20 14.3% 4.1%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(20 14.3% 4.1%);
+  /*--color-primary:  oklch(0.50 0.12 243);*/
+  /* deep burgundy */
+  --color-primary: white;
+  /* burgundy */
+  /*--color-primary: #3F1521;*/
+  /* porsche green */
+  /*--color-primary: #184A4C;*/
+  /* deep-blue */
+  /*--color-primary: #13273F;*/
+  /*--color-primary-foreground: oklch(0.50 0.12 243);*/
+  --color-primary-foreground: white;
+  --color-secondary: #563c4d;
+  --color-secondary-foreground: hsl(24 9.8% 10%);
+  --color-muted: hsl(60 4.8% 95.9%);
+  --color-muted-foreground: hsl(25 5.3% 44.7%);
+  --color-accent: hsl(60 4.8% 95.9%);
+  --color-accent-foreground: hsl(24 9.8% 10%);
+  --color-destructive: oklch(0.59 0.22 18);
+  --color-destructive-foreground: hsl(60 9.1% 97.8%);
+  --color-border: #563c4d;
+  --color-input: hsl(20 5.9% 90%);
+  /*--color-ring: oklch(0.50 0.12 243);*/
+  --color-ring: white;
+  --radius: 0.5rem;
+  --color-fd-card: #180c14;
+  --color-fd-secondary: #180c14;
+  --color-fd-background: #180c14;
+  --color-fd-popover: #180c14;
+}
+
 /* Animations */
 @keyframes enter {
   from {
@@ -80,7 +117,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground cursor-default;
+    @apply cursor-default text-primary bg-background selection:text-primary selection:bg-slate-100 dark:selection:bg-secondary;
   }
 }
 

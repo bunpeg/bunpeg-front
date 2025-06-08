@@ -2,10 +2,12 @@ import Link from 'next/link';
 import { FingerprintIcon, PencilIcon, ServerOffIcon, Settings2Icon, SparklesIcon } from 'lucide-react';
 
 import { Button } from '@/ui';
+import ThemeToggle from '@/components/theme-toggle';
 
 export default async function Home() {
   return (
     <section className="py-12 md:py-20">
+      <ThemeToggle />
       <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
         <div className="relative z-10 mx-auto max-w-2xl flex flex-col items-center text-center space-y-12">
           <h2 className="text-balance text-4xl font-medium lg:text-6xl ">Bunpeg</h2>
