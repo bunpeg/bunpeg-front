@@ -22,6 +22,7 @@
   /*--color-primary: #13273F;*/
   /*--color-primary-foreground: oklch(0.50 0.12 243);*/
   --color-primary-foreground: #3F1521;
+  /*--color-primary-foreground:  #13273F;*/
   --color-secondary: hsl(60 4.8% 95.9%);
   --color-secondary-foreground: hsl(24 9.8% 10%);
   --color-muted: hsl(60 4.8% 95.9%);
@@ -34,28 +35,24 @@
   --color-input: hsl(20 5.9% 90%);
   /*--color-ring: oklch(0.50 0.12 243);*/
   --color-ring: #3F1521;
+  /*--color-ring:  #13273F;*/
   --radius: 0.5rem;
 }
 
 :root.dark {
-  --color-background: #180c14;
+  /*--color-background: #180c14;*/
+  --color-background: #10080d;
+  /*--color-background: #0a141f;*/
   --color-foreground: hsl(20 14.3% 4.1%);
   --color-card: hsl(0 0% 100%);
   --color-card-foreground: hsl(20 14.3% 4.1%);
   --color-popover: hsl(0 0% 100%);
   --color-popover-foreground: hsl(20 14.3% 4.1%);
-  /*--color-primary:  oklch(0.50 0.12 243);*/
-  /* deep burgundy */
   --color-primary: white;
-  /* burgundy */
-  /*--color-primary: #3F1521;*/
-  /* porsche green */
-  /*--color-primary: #184A4C;*/
-  /* deep-blue */
-  /*--color-primary: #13273F;*/
-  /*--color-primary-foreground: oklch(0.50 0.12 243);*/
   --color-primary-foreground: white;
-  --color-secondary: #563c4d;
+  /*--color-secondary: #563c4d;*/
+  --color-secondary: #33202c;
+  /*--color-secondary: #2c3c4d;*/
   --color-secondary-foreground: hsl(24 9.8% 10%);
   --color-muted: hsl(60 4.8% 95.9%);
   --color-muted-foreground: hsl(25 5.3% 44.7%);
@@ -63,15 +60,24 @@
   --color-accent-foreground: hsl(24 9.8% 10%);
   --color-destructive: oklch(0.59 0.22 18);
   --color-destructive-foreground: hsl(60 9.1% 97.8%);
-  --color-border: #563c4d;
+  /*--color-border: #563c4d;*/
+  --color-border: #33202c;
+  /*--color-border: #2c3c4d;*/
   --color-input: hsl(20 5.9% 90%);
-  /*--color-ring: oklch(0.50 0.12 243);*/
   --color-ring: white;
   --radius: 0.5rem;
-  --color-fd-card: #180c14;
-  --color-fd-secondary: #180c14;
-  --color-fd-background: #180c14;
-  --color-fd-popover: #180c14;
+  /*--color-fd-card: #180c14;*/
+  --color-fd-card: #10080d;
+  /*--color-fd-card: #0a141f;*/
+  /*--color-fd-secondary: #180c14;*/
+  --color-fd-secondary: #10080d;
+  /*--color-fd-secondary: #0a141f;*/
+  /*--color-fd-background: #180c14;*/
+  --color-fd-background: #10080d;
+  /*--color-fd-background: #0a141f;*/
+  /*--color-fd-popover: #180c14;*/
+  --color-fd-popover: #10080d;
+  /*--color-fd-popover: #0a141f;*/
 }
 
 /* Animations */
