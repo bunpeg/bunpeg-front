@@ -5,17 +5,17 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-background: hsl(0 0% 100%);
+  /*--color-background: hsl(0 0% 100%);*/
+  --color-background: #faf7f7;
   --color-foreground: hsl(20 14.3% 4.1%);
-  --color-card: hsl(0 0% 100%);
+  /*--color-card: hsl(0 0% 100%);*/
+  --color-card: #faf7f7;
   --color-card-foreground: hsl(20 14.3% 4.1%);
-  --color-popover: hsl(0 0% 100%);
+  /*--color-popover: hsl(0 0% 100%);*/
+  --color-popover: #faf7f7;
   --color-popover-foreground: hsl(20 14.3% 4.1%);
-  /*--color-primary:  oklch(0.50 0.12 243);*/
   /* deep burgundy */
   --color-primary: #301728;
-  /* burgundy */
-  /*--color-primary: #3F1521;*/
   /* porsche green */
   /*--color-primary: #184A4C;*/
   /* deep-blue */
@@ -37,6 +37,14 @@
   --color-ring: #3F1521;
   /*--color-ring:  #13273F;*/
   --radius: 0.5rem;
+  /*--color-fd-card: hsl(0 0% 100%);*/
+  --color-fd-card: #faf7f7;
+  /*--color-fd-secondary: hsl(0 0% 100%);*/
+  --color-fd-secondary: #faf7f7;
+  /*--color-fd-background: hsl(0 0% 100%);*/
+  --color-fd-background: #faf7f7;
+  /*--color-fd-popover: hsl(0 0% 100%);*/
+  --color-fd-popover: #faf7f7;
 }
 
 :root.dark {
@@ -44,12 +52,12 @@
   --color-background: #10080d;
   /*--color-background: #0a141f;*/
   --color-foreground: hsl(20 14.3% 4.1%);
-  --color-card: hsl(0 0% 100%);
+  --color-card: #faf7f7;
   --color-card-foreground: hsl(20 14.3% 4.1%);
-  --color-popover: hsl(0 0% 100%);
+  --color-popover: #faf7f7;
   --color-popover-foreground: hsl(20 14.3% 4.1%);
-  --color-primary: white;
-  --color-primary-foreground: white;
+  --color-primary: #faf7f7;
+  --color-primary-foreground: #faf7f7;
   /*--color-secondary: #563c4d;*/
   --color-secondary: #33202c;
   /*--color-secondary: #2c3c4d;*/
@@ -63,8 +71,9 @@
   /*--color-border: #563c4d;*/
   --color-border: #33202c;
   /*--color-border: #2c3c4d;*/
-  --color-input: hsl(20 5.9% 90%);
-  --color-ring: white;
+  /*--color-input: hsl(20 5.9% 90%);*/
+  --color-input: #faf7f7;
+  --color-ring: #faf7f7;
   --radius: 0.5rem;
   /*--color-fd-card: #180c14;*/
   --color-fd-card: #10080d;

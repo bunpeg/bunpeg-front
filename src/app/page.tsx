@@ -48,6 +48,14 @@ export default async function Home() {
 
           <div className="space-y-2 border relative">
             <div className="flex items-center gap-2">
+              <SparklesIcon className="size-4" />
+              <h3 className="text-sm font-medium">Docs for AI</h3>
+            </div>
+            <p className="text-sm">You can download and feed our docs to our AI of choice.</p>
+          </div>
+
+          <div className="space-y-2 border relative">
+            <div className="flex items-center gap-2">
               <FingerprintIcon className="size-4" />
               <h3 className="text-sm font-medium">Security</h3>
             </div>
@@ -70,15 +78,6 @@ export default async function Home() {
               <h3 className="text-sm font-medium">Control</h3>
             </div>
             <p className="text-sm">It supports helping developers and businesses innovate.</p>
-            <sub className="pl-10 absolute bottom-4 left-0">(placeholder)</sub>
-          </div>
-
-          <div className="space-y-2 border relative">
-            <div className="flex items-center gap-2">
-              <SparklesIcon className="size-4" />
-              <h3 className="text-sm font-medium">Docs for AI</h3>
-            </div>
-            <p className="text-sm">You can download and feed our docs to our AI of choice.</p>
             <sub className="pl-10 absolute bottom-4 left-0">(placeholder)</sub>
           </div>
         </div>
