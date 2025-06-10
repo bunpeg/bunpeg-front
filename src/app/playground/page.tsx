@@ -4,12 +4,12 @@ import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@/ui';
 import FilesList from '@/app/playground/files-list';
 import TasksList from '@/app/playground/tasks-list';
-import ThemeToggle from '@/components/theme-toggle';
+import DefaultThemeToggle from '@/components/default-theme-toggle';
 
 export default async function Home() {
   return (
     <section className="w-screen h-screen flex flex-col pt-10 px-4">
-      <ThemeToggle />
+      <DefaultThemeToggle />
       <div>
         <Link href="/">
           <Button variant="link" className="group">

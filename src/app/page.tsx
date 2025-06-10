@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import { FingerprintIcon, PencilIcon, ServerOffIcon, Settings2Icon, SparklesIcon } from 'lucide-react';
+import { FingerprintIcon, GithubIcon, PencilIcon, ServerOffIcon, Settings2Icon, SparklesIcon } from 'lucide-react';
 
 import { Button } from '@/ui';
-import ThemeToggle from '@/components/theme-toggle';
+import DynamicThemeToggle from '@/components/dynamic-theme-toggle';
 
 export default async function Home() {
   return (
     <section className="py-12 md:py-20">
-      <ThemeToggle />
+      <DynamicThemeToggle />
       <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
         <div className="relative z-10 mx-auto max-w-2xl flex flex-col items-center text-center space-y-12">
           <h2 className="text-balance text-4xl font-medium lg:text-6xl ">Bunpeg</h2>
@@ -16,11 +16,17 @@ export default async function Home() {
             You can upload media files (video or audio), run FFmpeg commands on them, and download the results.
           </p>
           <div className="hidden md:flex items-center gap-2">
+            <Link href="/playground">
+              <Button variant="outline">Check the playground</Button>
+            </Link>
             <Link href="/docs">
               <Button variant="default">Read the docs</Button>
             </Link>
-            <Link href="/playground">
-              <Button variant="outline">Check the playground</Button>
+            <Link href="https://github.com/bunpeg/bunpeg" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline">
+                <GithubIcon className="size-4 mr-2" />
+                Check the repo
+              </Button>
             </Link>
           </div>
           <div className="flex md:hidden items-center gap-2">

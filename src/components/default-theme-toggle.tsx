@@ -4,7 +4,7 @@ import { MonitorCogIcon, MoonIcon, SunIcon } from 'lucide-react';
 
 import { Button } from '@/ui';
 
-export default function ThemeToggle() {
+export default function DefaultThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   const switchTheme = () => {

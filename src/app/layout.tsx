@@ -8,7 +8,7 @@ import ClientProviders from '@/components/client-providers';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Bunpeg Dashboard',
+  title: 'Bunpeg',
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
 

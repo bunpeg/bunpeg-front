@@ -3,7 +3,7 @@ import { FileCode2Icon } from 'lucide-react';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 
 import { docs } from '@/utils/docs';
-import ThemeToggle from '@/components/theme-toggle';
+import DynamicThemeToggle from '@/components/dynamic-theme-toggle';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       ]}
       githubUrl="https://github.com/bunpeg/bunpeg"
     >
-      <ThemeToggle />
+      <DynamicThemeToggle />
       {children}
     </DocsLayout>
   );
