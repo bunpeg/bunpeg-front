@@ -67,6 +67,9 @@ function SkeletonRow() {
       <TableCell>
         <Skeleton className="h-5" />
       </TableCell>
+      <TableCell>
+        <Skeleton className="h-5" />
+      </TableCell>
     </TableRow>
   );
 }
@@ -74,7 +77,7 @@ function SkeletonRow() {
 function EmptySpace() {
   return (
     <TableRow>
-      <TableCell colSpan={3}>No tasks to show</TableCell>
+      <TableCell colSpan={4}>No tasks to show</TableCell>
     </TableRow>
   )
 }

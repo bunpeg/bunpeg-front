@@ -1,18 +1,21 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import {
   ChevronsRight,
   CloudDownloadIcon,
   ExternalLinkIcon,
   FileAudioIcon,
+  FilePlus2Icon,
   FileVideo,
   ImagePlayIcon,
+  ImagePlusIcon,
+  ScalingIcon,
   ScissorsLineDashedIcon,
   TerminalIcon,
   Trash2Icon,
+  VolumeOffIcon,
 } from 'lucide-react';
 
 import { api } from '@/trpc/react';
@@ -21,8 +24,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Loader,
   Skeleton,
@@ -152,18 +158,17 @@ export default function FilesList() {
         {!isLoading && files.length === 0 ? <EmptySpace /> : null}
         {files.map((file) => {
           const meta = file.metadata ? JSON.parse(file.metadata) : {};
+          const isVideo = file.mime_type.startsWith('video/');
 
           return (
             <TableRow key={file.id}>
               <TableCell>
-                {file.mime_type.startsWith('video/')
-                  ? <FileVideo className="size-4" />
-                  : <FileAudioIcon className="size-4" />}
+                {isVideo ? <FileVideo className="size-4" /> : <FileAudioIcon className="size-4" />}
               </TableCell>
               <TableCell>
                 {file.file_name}
                 <br className="hidden lg:inline"/>
-                {meta?.fileSize ? ` (size: ${(meta.fileSize / 1024 / 1024).toFixed(2)} MB | duration: ${meta.duration} s)` : ''}
+                <Stats metadata={file.metadata ?? null} />
               </TableCell>
               <TableCell>
                 <DropdownMenu>
@@ -173,90 +178,125 @@ export default function FilesList() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Transcode</DropdownMenuLabel>
-                    <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mp4' })}>
-                      <ImagePlayIcon className="size-4 mr-2" />
-                      To .mp4
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mov' })}>
-                      <ImagePlayIcon className="size-4 mr-2" />
-                      To .mov
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mkv' })}>
-                      <ImagePlayIcon className="size-4 mr-2" />
-                      To .mkv
-                    </DropdownMenuItem>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Transcode</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mp4' })}>
+                            <ImagePlayIcon className="size-4 mr-2" />
+                            To .mp4
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mov' })}>
+                            <ImagePlayIcon className="size-4 mr-2" />
+                            To .mov
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mkv' })}>
+                            <ImagePlayIcon className="size-4 mr-2" />
+                            To .mkv
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Trim</DropdownMenuLabel>
-                    <DropdownMenuItem
-                      disabled={isPending}
-                      onClick={() => {
-                        const parts = file.file_name.split('.');
-                        trim({ fileId: file.id, start: 0, duration: 10, outputFormat: parts.at(-1)! });
-                      }}
-                    >
-                      <ScissorsLineDashedIcon className="size-4 mr-2" />
-                      From start
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      disabled={isPending || !file.metadata}
-                      onClick={() => {
-                        if (!file.metadata) return;
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Trim</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              const parts = file.file_name.split('.');
+                              trim({ fileId: file.id, start: 0, duration: 10, outputFormat: parts.at(-1)! });
+                            }}
+                          >
+                            <ScissorsLineDashedIcon className="size-4 mr-2" />
+                            From start
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending || !file.metadata}
+                            onClick={() => {
+                              if (!file.metadata) return;
 
-                        const meta = JSON.parse(file.metadata);
-                        if (Number.isNaN(Number(meta.duration))) return;
+                              const meta = JSON.parse(file.metadata);
+                              if (Number.isNaN(Number(meta.duration))) return;
 
-                        const parts = file.file_name.split('.');
-                        trim({
-                          fileId: file.id,
-                          start: 5,
-                          duration: Number(meta.duration) - 5,
-                          outputFormat: parts.at(-1)!,
-                        });
-                      }}
-                    >
-                      <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
-                      From end (trim)
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      disabled={isPending}
-                      onClick={() => {
-                        if (Number.isNaN(Number(meta.duration))) return;
+                              const parts = file.file_name.split('.');
+                              trim({
+                                fileId: file.id,
+                                start: 5,
+                                duration: Number(meta.duration) - 5,
+                                outputFormat: parts.at(-1)!,
+                              });
+                            }}
+                          >
+                            <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
+                            From end (trim)
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              if (Number.isNaN(Number(meta.duration))) return;
 
-                        const parts = file.file_name.split('.');
-                        cutEnd({
-                          fileId: file.id,
-                          duration: Number(meta.duration) - 5,
-                          outputFormat: parts.at(-1)!,
-                        });
-                      }}
-                    >
-                      <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
-                      From end (trim-end)
-                    </DropdownMenuItem>
+                              const parts = file.file_name.split('.');
+                              cutEnd({
+                                fileId: file.id,
+                                duration: Number(meta.duration) - 5,
+                                outputFormat: parts.at(-1)!,
+                              });
+                            }}
+                          >
+                            <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
+                            From end (trim-end)
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem disabled={isPending}>
-                      <FileAudioIcon className="size-4 mr-2" />
-                      Extract audio
-                    </DropdownMenuItem>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Audio</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem disabled={isPending}>
+                            <FileAudioIcon className="size-4 mr-2" />
+                            Extract audio
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending || !file.metadata}>
+                            <VolumeOffIcon className="size-4 mr-2" />
+                            Remove audio
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending}>
+                            <FilePlus2Icon className="size-4 mr-2" />
+                            Add audio
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
                       <ChevronsRight className="size-4 mr-2" />
                       Chain operations
                     </DropdownMenuItem>
+                    <DropdownMenuItem disabled={isPending}>
+                      <ImagePlusIcon className="size-4 mr-2" />
+                      Extract thumbnail
+                    </DropdownMenuItem>
+                    <DropdownMenuItem disabled={isPending}>
+                      <ScalingIcon className="size-4 mr-2" />
+                      Scale up/down
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
+                    <a href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
                       <DropdownMenuItem disabled={isPending}>
                         <ExternalLinkIcon className="size-4 mr-2" />
                         Preview
                       </DropdownMenuItem>
-                    </Link>
-                    <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/download/${file.id}`} target="_blank">
+                    </a>
+                    <a href={`${env.NEXT_PUBLIC_BUNPEG_API}/download/${file.id}`} target="_blank">
                       <DropdownMenuItem disabled={isPending}>
                         <CloudDownloadIcon className="size-4 mr-2" />
                         Download
                       </DropdownMenuItem>
-                    </Link>
+                    </a>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => deleteFile(file.id)} disabled={isPending}>
                       <Trash2Icon className="size-4 mr-2" />
@@ -431,4 +471,14 @@ function UploadButton() {
       <input ref={fileInputRef} type="file" accept="video/*" className="hidden" onChange={handleChange} disabled={loading} />
     </>
   );
+}
+
+function Stats({ metadata }: { metadata: string | null }) {
+  if (!metadata) return null;
+
+  const meta = JSON.parse(metadata);
+
+  const segments = [];
+
+  if (meta.fileSize) {}
 }

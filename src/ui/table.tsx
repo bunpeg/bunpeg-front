@@ -39,7 +39,7 @@ TableFooter.displayName = 'TableFooter'
 const TableRow = ({ className, ...props }: React.ComponentProps<'tr'>) => (
   <tr
     className={cn(
-      'border-b transition-colors hover:bg-gray-50 data-[state=selected]:bg-gray-100 dark:hover:bg-gray-800/50 dark:data-[state=selected]:bg-gray-800',
+      'border-b transition-colors data-[state=selected]:bg-secondary',
       className
     )}
     {...props}

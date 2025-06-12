@@ -23,7 +23,8 @@
   /*--color-primary-foreground: oklch(0.50 0.12 243);*/
   --color-primary-foreground: #3F1521;
   /*--color-primary-foreground:  #13273F;*/
-  --color-secondary: hsl(60 4.8% 95.9%);
+  /*--color-secondary: hsl(60 4.8% 95.9%);*/
+  --color-secondary: #fae3e9;
   --color-secondary-foreground: hsl(24 9.8% 10%);
   --color-muted: hsl(60 4.8% 95.9%);
   --color-muted-foreground: hsl(25 5.3% 44.7%);
@@ -132,7 +133,7 @@
     @apply border-border;
   }
   body {
-    @apply cursor-default text-primary bg-background selection:text-primary selection:bg-slate-100 dark:selection:bg-secondary;
+    @apply cursor-default text-primary bg-background selection:text-background selection:bg-primary;
   }
 }
 

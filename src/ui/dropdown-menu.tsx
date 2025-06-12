@@ -23,7 +23,7 @@ const DropdownMenuSubTrigger = ({ className, inset, children, ...props }: React.
 }) => (
   <DropdownMenuPrimitive.SubTrigger
     className={cn(
-      'flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden focus:bg-gray-100 data-[state=open]:bg-gray-100 dark:focus:bg-gray-800 dark:data-[state=open]:bg-gray-800 data-disabled:pointer-events-none data-disabled:cursor-default data-disabled:opacity-50',
+      'flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden focus:bg-primary focus:text-background data-[state=open]:bg-primary data-[state=open]:text-background data-disabled:pointer-events-none data-disabled:cursor-default data-disabled:opacity-50',
       inset && 'pl-8',
       className
     )}
@@ -38,7 +38,7 @@ DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayNam
 const DropdownMenuSubContent = ({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) => (
   <DropdownMenuPrimitive.SubContent
     className={cn(
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white p-1 text-gray-950 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-50',
+      'z-50 min-w-[8rem] overflow-hidden rounded-md border text-gray-950 border-gray-200 bg-white dark:bg-secondary dark:border-border dark:text-gray-50 p-1 ml-2 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
       className
     )}
     {...props}
@@ -65,7 +65,7 @@ const DropdownMenuItem = ({ className, inset, ...props }: React.ComponentProps<t
 }) => (
   <DropdownMenuPrimitive.Item
     className={cn(
-      'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-gray-100 focus:text-gray-900 dark:focus:bg-primary dark:focus:text-background data-disabled:pointer-events-none data-disabled:cursor-default data-disabled:opacity-50',
+      'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-primary focus:text-background dark:focus:bg-primary dark:focus:text-background data-disabled:pointer-events-none data-disabled:cursor-default data-disabled:opacity-50',
       inset && 'pl-8',
       className
     )}
