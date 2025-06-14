@@ -7,14 +7,16 @@ import {
   CloudDownloadIcon,
   CloudUploadIcon,
   CombineIcon,
+  ExpandIcon,
   ExternalLinkIcon,
   FileAudioIcon,
+  FileImageIcon,
   FilePlus2Icon,
-  FileVideo,
+  FileVideoIcon,
   ImagePlayIcon,
   ImagePlusIcon,
-  ScalingIcon,
   ScissorsLineDashedIcon,
+  ShrinkIcon,
   SquareDashedIcon,
   SquareIcon,
   TerminalIcon,
@@ -103,6 +105,21 @@ export default function FilesList() {
 
       if (!response.ok || response.status !== 200) {
         throw new Error('Unable to create transcode task');
+      }
+    },
+    onSuccess,
+    onError,
+  })
+
+  const { mutate: resize, isPending: isResizing } = useMutation<void, Error, { fileId: string, width: number; height: number; outputFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/resize-video`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create resize-video task');
       }
     },
     onSuccess,
@@ -269,7 +286,8 @@ export default function FilesList() {
     isRemovingAudio ||
     isAddingAudio ||
     isMerging ||
-    isExtracting;
+    isExtracting ||
+    isResizing;
 
   const resolveFormat = (fileName: string) => {
     const parts = fileName.split('.');
@@ -279,7 +297,7 @@ export default function FilesList() {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="h-20">
           <TableCell className="w-10">
             <Button size="xs" variant="ghost" className="px-1" title="Toggle selection of rows" onClick={toggleSelection}>
               {!isSelecting ? <SquareIcon className="size-4" /> : <SquareDashedIcon className="size-4" />}
@@ -332,7 +350,11 @@ export default function FilesList() {
         {!isLoading && files.length === 0 ? <EmptySpace /> : null}
         {files.map((file) => {
           const meta = file.metadata ? JSON.parse(file.metadata) : {};
+          const width = meta.resolution?.width ? Number(meta.resolution?.width) : 1024;
+          const height = meta.resolution?.height ? Number(meta.resolution?.height) : 768;
           const isVideo = file.mime_type.startsWith('video/');
+          const isAudio = file.mime_type.startsWith('audio/');
+          const isImage = file.mime_type.startsWith('image/');
           const currentFormat = resolveFormat(file.file_name);
 
           return (
@@ -343,7 +365,9 @@ export default function FilesList() {
                     ? <Checkbox checked={isSelected(file)} onCheckedChange={() => toggleFileSelection(file)} />
                     : (
                       <>
-                        {isVideo ? <FileVideo className="size-5" /> : <FileAudioIcon className="size-5" />}
+                        {isVideo && <FileVideoIcon className="size-5" /> }
+                        {isAudio && <FileAudioIcon className="size-5" /> }
+                        {isImage && <FileImageIcon className="size-5" /> }
                       </>
                     )
                 }
@@ -462,10 +486,35 @@ export default function FilesList() {
                       <DropdownMenuSubTrigger>Other</DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
                         <DropdownMenuSubContent>
-                          <DropdownMenuItem disabled={isPending}>
-                            <ScalingIcon className="size-4 mr-2" />
-                            Scale up/down
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              resize({
+                                fileId: file.id,
+                                width: width * 2,
+                                height: height * 2,
+                                outputFormat: currentFormat,
+                              });
+                            }}
+                          >
+                            <ExpandIcon className="size-4 mr-2" />
+                            Scale up
                           </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              resize({
+                                fileId: file.id,
+                                width: width / 2,
+                                height: height / 2,
+                                outputFormat: currentFormat,
+                              });
+                            }}
+                          >
+                            <ShrinkIcon className="size-4 mr-2" />
+                            Scale down
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
                           <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
                             <ChevronsRight className="size-4 mr-2" />
                             Chain operations

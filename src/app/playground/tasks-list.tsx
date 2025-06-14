@@ -12,7 +12,7 @@ export default function TasksList() {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="h-20">
           <TableCell className="w-6">
             <span className="sr-only">ID</span>
           </TableCell>
