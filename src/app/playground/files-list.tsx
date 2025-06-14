@@ -1,28 +1,43 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import {
   ChevronsRight,
   CloudDownloadIcon,
+  CloudUploadIcon,
+  CombineIcon,
+  ExpandIcon,
   ExternalLinkIcon,
   FileAudioIcon,
-  FileVideo,
+  FileImageIcon,
+  FilePlus2Icon,
+  FileVideoIcon,
   ImagePlayIcon,
+  ImagePlusIcon,
   ScissorsLineDashedIcon,
+  ShrinkIcon,
+  SquareDashedIcon,
+  SquareIcon,
   TerminalIcon,
   Trash2Icon,
+  VolumeOffIcon,
 } from 'lucide-react';
+import { type inferRouterOutputs } from '@trpc/server';
 
 import { api } from '@/trpc/react';
 import {
   Button,
+  Checkbox,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Loader,
   Skeleton,
@@ -35,10 +50,39 @@ import {
   validateFile,
 } from '@/ui';
 import { env } from '@/env';
+import { append, remove } from '@/utils/arrays';
+import { type AppRouter } from '@/server/api/root';
+
+type UserFile = inferRouterOutputs<AppRouter>['files']['list'][0];
 
 export default function FilesList() {
-  const utils = api.useUtils();
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<UserFile[]>([]);
 
+  const toggleSelection = () => {
+    if (isSelecting) {
+      setSelectedFiles([]);
+      setIsSelecting(false);
+    } else {
+      setIsSelecting(true);
+    }
+  };
+
+  const toggleFileSelection = (file: UserFile) => {
+    const fileIndex = selectedFiles.findIndex((__file) => __file.id === file.id);
+
+    if (fileIndex !== -1) {
+      setSelectedFiles(remove(selectedFiles, fileIndex));
+    } else {
+      setSelectedFiles(append(selectedFiles, file));
+    }
+  }
+
+  const isSelected = (file: UserFile) => {
+    return selectedFiles.findIndex((__file) => __file.id === file.id) !== -1;
+  }
+
+  const utils = api.useUtils();
   const { data: files = [], isLoading } = api.files.list.useQuery(undefined, {
     refetchInterval: 5000,
   });
@@ -46,6 +90,10 @@ export default function FilesList() {
   const onSuccess = () => {
     void utils.files.list.invalidate();
     void utils.tasks.list.invalidate();
+  }
+
+  const onError = (err: any) => {
+    toast.error('Failed to create task', { description: err.message });
   }
 
   const { mutate: transcode, isPending: isTranscoding } = useMutation<void, Error, { fileId: string; format: string }, unknown>({
@@ -60,6 +108,22 @@ export default function FilesList() {
       }
     },
     onSuccess,
+    onError,
+  })
+
+  const { mutate: resize, isPending: isResizing } = useMutation<void, Error, { fileId: string, width: number; height: number; outputFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/resize-video`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create resize-video task');
+      }
+    },
+    onSuccess,
+    onError,
   })
 
   const { mutate: trim, isPending: isTrimming } = useMutation<void, Error, { fileId: string; start: number; duration: number; outputFormat: string }, unknown>({
@@ -74,6 +138,7 @@ export default function FilesList() {
       }
     },
     onSuccess,
+    onError,
   })
 
   const { mutate: cutEnd, isPending: isCutting } = useMutation<void, Error, { fileId: string; duration: number; outputFormat: string }, unknown>({
@@ -88,6 +153,68 @@ export default function FilesList() {
       }
     },
     onSuccess,
+    onError,
+  })
+
+  const { mutate: extractAudio, isPending: isExtractingAudio } = useMutation<void, Error, { fileId: string; audioFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/extract-audio`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create extract-audio task');
+      }
+    },
+    onSuccess,
+    onError,
+  })
+
+  const { mutate: removeAudio, isPending: isRemovingAudio } = useMutation<void, Error, { fileId: string; outputFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/remove-audio`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create remove-audio task');
+      }
+    },
+    onSuccess,
+    onError,
+  })
+
+  const { mutate: addAudio, isPending: isAddingAudio } = useMutation<void, Error, { videoFileId: string; audioFileId: string; outputFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/add-audio`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create add-audio task');
+      }
+    },
+    onSuccess,
+    onError,
+  })
+
+  const { mutate: merge, isPending: isMerging } = useMutation<void, Error, { fileIds: string[]; outputFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/merge`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create add-audio task');
+      }
+    },
+    onSuccess,
+    onError,
+    onSettled: toggleSelection,
   })
 
   const { mutate: chain, isPending: isChaining } = useMutation<void, Error, { fileId: string }, unknown>({
@@ -117,6 +244,22 @@ export default function FilesList() {
       }
     },
     onSuccess,
+    onError
+  })
+
+  const { mutate: extractThumbnail, isPending: isExtracting } = useMutation<void, Error, { fileId: string; timestamp: string; imageFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/extract-thumbnail`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create extract-thumbnail task');
+      }
+    },
+    onSuccess,
+    onError,
   })
 
   const { mutate: deleteFile, isPending: isDeleting } = useMutation<void, Error, string, unknown>({
@@ -130,20 +273,75 @@ export default function FilesList() {
       }
     },
     onSuccess,
+    onError
   })
 
-  const isPending = isDeleting || isTranscoding || isTrimming || isCutting || isChaining;
+  const isPending =
+    isDeleting ||
+    isTranscoding ||
+    isTrimming ||
+    isCutting ||
+    isChaining ||
+    isExtractingAudio ||
+    isRemovingAudio ||
+    isAddingAudio ||
+    isMerging ||
+    isExtracting ||
+    isResizing;
+
+  const resolveFormat = (fileName: string) => {
+    const parts = fileName.split('.');
+    return parts.at(-1)!;
+  }
 
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="h-20">
           <TableCell className="w-10">
-            <span className="sr-only">File type</span>
+            <Button size="xs" variant="ghost" className="px-1" title="Toggle selection of rows" onClick={toggleSelection}>
+              {!isSelecting ? <SquareIcon className="size-4" /> : <SquareDashedIcon className="size-4" />}
+              <span className="sr-only">selection toggle</span>
+            </Button>
           </TableCell>
           <TableCell>File</TableCell>
-          <TableCell className="w-24">
-            <UploadButton />
+          <TableCell className="w-24 text-center">
+            {isSelecting ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild disabled={isPending || selectedFiles.length < 2}>
+                  <Button size="icon" variant="ghost">
+                    <TerminalIcon className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    disabled={isPending}
+                    onClick={() => {
+                      addAudio({
+                        videoFileId: selectedFiles[0]!.id,
+                        audioFileId: selectedFiles[1]!.id,
+                        outputFormat: resolveFormat(selectedFiles[0]!.file_name),
+                      });
+                    }}
+                  >
+                    <FilePlus2Icon className="size-4 mr-2" />
+                    Add audio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    disabled={isPending}
+                    onClick={() => {
+                      merge({
+                        fileIds: selectedFiles.map((f) => f.id),
+                        outputFormat: resolveFormat(selectedFiles[0]!.file_name),
+                      });
+                    }}
+                  >
+                    <CombineIcon className="size-4 mr-2" />
+                    Merge files
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : <UploadButton />}
           </TableCell>
         </TableRow>
       </TableHeader>
@@ -152,112 +350,205 @@ export default function FilesList() {
         {!isLoading && files.length === 0 ? <EmptySpace /> : null}
         {files.map((file) => {
           const meta = file.metadata ? JSON.parse(file.metadata) : {};
+          const width = meta.resolution?.width ? Number(meta.resolution?.width) : 1024;
+          const height = meta.resolution?.height ? Number(meta.resolution?.height) : 768;
+          const isVideo = file.mime_type.startsWith('video/');
+          const isAudio = file.mime_type.startsWith('audio/');
+          const isImage = file.mime_type.startsWith('image/');
+          const currentFormat = resolveFormat(file.file_name);
 
           return (
             <TableRow key={file.id}>
-              <TableCell>
-                {file.mime_type.startsWith('video/')
-                  ? <FileVideo className="size-4" />
-                  : <FileAudioIcon className="size-4" />}
+              <TableCell className="text-center">
+                {
+                  isSelecting
+                    ? <Checkbox checked={isSelected(file)} onCheckedChange={() => toggleFileSelection(file)} />
+                    : (
+                      <>
+                        {isVideo && <FileVideoIcon className="size-5" /> }
+                        {isAudio && <FileAudioIcon className="size-5" /> }
+                        {isImage && <FileImageIcon className="size-5" /> }
+                      </>
+                    )
+                }
               </TableCell>
               <TableCell>
                 {file.file_name}
-                <br className="hidden lg:inline"/>
-                {meta?.fileSize ? ` (size: ${(meta.fileSize / 1024 / 1024).toFixed(2)} MB | duration: ${meta.duration} s)` : ''}
+                <br />
+                <Stats metadata={file.metadata ?? null} />
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild disabled={isPending}>
                     <Button size="icon" variant="ghost">
                       <TerminalIcon className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Transcode</DropdownMenuLabel>
-                    <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mp4' })}>
-                      <ImagePlayIcon className="size-4 mr-2" />
-                      To .mp4
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mov' })}>
-                      <ImagePlayIcon className="size-4 mr-2" />
-                      To .mov
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mkv' })}>
-                      <ImagePlayIcon className="size-4 mr-2" />
-                      To .mkv
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Trim</DropdownMenuLabel>
-                    <DropdownMenuItem
-                      disabled={isPending}
-                      onClick={() => {
-                        const parts = file.file_name.split('.');
-                        trim({ fileId: file.id, start: 0, duration: 10, outputFormat: parts.at(-1)! });
-                      }}
-                    >
-                      <ScissorsLineDashedIcon className="size-4 mr-2" />
-                      From start
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      disabled={isPending || !file.metadata}
-                      onClick={() => {
-                        if (!file.metadata) return;
+                  <DropdownMenuContent align="end" className="min-w-40">
+                    <DropdownMenuLabel>ID: {file.id}</DropdownMenuLabel>
 
-                        const meta = JSON.parse(file.metadata);
-                        if (Number.isNaN(Number(meta.duration))) return;
+                    <DropdownMenuSeparator />
 
-                        const parts = file.file_name.split('.');
-                        trim({
-                          fileId: file.id,
-                          start: 5,
-                          duration: Number(meta.duration) - 5,
-                          outputFormat: parts.at(-1)!,
-                        });
-                      }}
-                    >
-                      <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
-                      From end (trim)
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      disabled={isPending}
-                      onClick={() => {
-                        if (Number.isNaN(Number(meta.duration))) return;
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Transcode</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mp4' })}>
+                            <ImagePlayIcon className="size-4 mr-2" />
+                            To .mp4
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mov' })}>
+                            <ImagePlayIcon className="size-4 mr-2" />
+                            To .mov
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending} onClick={() => transcode({ fileId: file.id, format: 'mkv' })}>
+                            <ImagePlayIcon className="size-4 mr-2" />
+                            To .mkv
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
 
-                        const parts = file.file_name.split('.');
-                        cutEnd({
-                          fileId: file.id,
-                          duration: Number(meta.duration) - 5,
-                          outputFormat: parts.at(-1)!,
-                        });
-                      }}
-                    >
-                      <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
-                      From end (trim-end)
-                    </DropdownMenuItem>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Trim</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => trim({ fileId: file.id, start: 0, duration: 10, outputFormat: currentFormat })}
+                          >
+                            <ScissorsLineDashedIcon className="size-4 mr-2" />
+                            From start
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending || !file.metadata}
+                            onClick={() => {
+                              if (!file.metadata) return;
+
+                              const meta = JSON.parse(file.metadata);
+                              if (Number.isNaN(Number(meta.duration))) return;
+
+                              const parts = file.file_name.split('.');
+                              trim({
+                                fileId: file.id,
+                                start: 5,
+                                duration: Number(meta.duration) - 5,
+                                outputFormat: parts.at(-1)!,
+                              });
+                            }}
+                          >
+                            <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
+                            From end (trim)
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              if (Number.isNaN(Number(meta.duration))) return;
+
+                              const parts = file.file_name.split('.');
+                              cutEnd({
+                                fileId: file.id,
+                                duration: Number(meta.duration) - 5,
+                                outputFormat: parts.at(-1)!,
+                              });
+                            }}
+                          >
+                            <ScissorsLineDashedIcon className="size-4 mr-2 rotate-180" />
+                            From end (trim-end)
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Audio</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => extractAudio({ fileId: file.id, audioFormat: 'mp3' })}
+                          >
+                            <FileAudioIcon className="size-4 mr-2" />
+                            Extract audio
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending || !file.metadata}
+                            onClick={() => removeAudio({ fileId: file.id, outputFormat: currentFormat })}
+                          >
+                            <VolumeOffIcon className="size-4 mr-2" />
+                            Remove audio
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Other</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              resize({
+                                fileId: file.id,
+                                width: width * 2,
+                                height: height * 2,
+                                outputFormat: currentFormat,
+                              });
+                            }}
+                          >
+                            <ExpandIcon className="size-4 mr-2" />
+                            Scale up
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              resize({
+                                fileId: file.id,
+                                width: width / 2,
+                                height: height / 2,
+                                outputFormat: currentFormat,
+                              });
+                            }}
+                          >
+                            <ShrinkIcon className="size-4 mr-2" />
+                            Scale down
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
+                            <ChevronsRight className="size-4 mr-2" />
+                            Chain operations
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              extractThumbnail({ fileId: file.id, timestamp: '10', imageFormat: 'png' });
+                            }}
+                          >
+                            <ImagePlusIcon className="size-4 mr-2" />
+                            Extract thumbnail
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem disabled={isPending}>
-                      <FileAudioIcon className="size-4 mr-2" />
-                      Extract audio
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
-                      <ChevronsRight className="size-4 mr-2" />
-                      Chain operations
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
+
+                    <a href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
                       <DropdownMenuItem disabled={isPending}>
                         <ExternalLinkIcon className="size-4 mr-2" />
                         Preview
                       </DropdownMenuItem>
-                    </Link>
-                    <Link href={`${env.NEXT_PUBLIC_BUNPEG_API}/download/${file.id}`} target="_blank">
+                    </a>
+                    <a href={`${env.NEXT_PUBLIC_BUNPEG_API}/download/${file.id}`} target="_blank">
                       <DropdownMenuItem disabled={isPending}>
                         <CloudDownloadIcon className="size-4 mr-2" />
                         Download
                       </DropdownMenuItem>
-                    </Link>
+                    </a>
+
                     <DropdownMenuSeparator />
+
                     <DropdownMenuItem onClick={() => deleteFile(file.id)} disabled={isPending}>
                       <Trash2Icon className="size-4 mr-2" />
                       Remove
@@ -425,10 +716,33 @@ function UploadButton() {
 
   return (
     <>
-      <Button size="xs" onClick={openFilePicker} disabled={loading}>
-        {loading ? <Loader size="xs" color="white" /> : 'Upload'}
+      <Button size="icon" onClick={openFilePicker} disabled={loading}>
+        {loading ? <Loader size="xs" color="white" /> : <CloudUploadIcon className="size-4" />}
       </Button>
       <input ref={fileInputRef} type="file" accept="video/*" className="hidden" onChange={handleChange} disabled={loading} />
     </>
   );
+}
+
+function Stats({ metadata }: { metadata: string | null }) {
+  if (!metadata) return null;
+
+  const meta = JSON.parse(metadata);
+
+  const segments = [];
+
+  if (meta.size) {
+    segments.push(`size: ${(meta.size / 1024 / 1024).toFixed(2)} MB`);
+  }
+
+  if (meta.duration) {
+    segments.push(`duration: ${meta.duration.toFixed(2)} s`);
+  }
+
+  if (meta.resolution?.width && meta.resolution?.height) {
+    segments.push(`res: ${meta.resolution.width}x${meta.resolution.height}`);
+  }
+
+  const jointSegments = segments.join(' | ');
+  return <> {jointSegments}</>;
 }

@@ -12,7 +12,7 @@ export default function TasksList() {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="h-20">
           <TableCell className="w-6">
             <span className="sr-only">ID</span>
           </TableCell>
@@ -37,7 +37,9 @@ export default function TasksList() {
               {task.status === 'unreachable' && <CircleOffIcon className="size-4" />}
             </TableCell>
             <TableCell>{task.operation}</TableCell>
-            <TableCell>{task.args}</TableCell>
+            <TableCell>
+              {task.args}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -67,6 +69,9 @@ function SkeletonRow() {
       <TableCell>
         <Skeleton className="h-5" />
       </TableCell>
+      <TableCell>
+        <Skeleton className="h-5" />
+      </TableCell>
     </TableRow>
   );
 }
@@ -74,7 +79,7 @@ function SkeletonRow() {
 function EmptySpace() {
   return (
     <TableRow>
-      <TableCell colSpan={3}>No tasks to show</TableCell>
+      <TableCell colSpan={4}>No tasks to show</TableCell>
     </TableRow>
   )
 }
