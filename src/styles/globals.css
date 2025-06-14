@@ -6,13 +6,13 @@
 
 @theme {
   /*--color-background: hsl(0 0% 100%);*/
-  --color-background: #faf7f7;
+  --color-background: #fafafa;
   --color-foreground: hsl(20 14.3% 4.1%);
   /*--color-card: hsl(0 0% 100%);*/
-  --color-card: #faf7f7;
+  --color-card: #fafafa;
   --color-card-foreground: hsl(20 14.3% 4.1%);
   /*--color-popover: hsl(0 0% 100%);*/
-  --color-popover: #faf7f7;
+  --color-popover: #fafafa;
   --color-popover-foreground: hsl(20 14.3% 4.1%);
   /* deep burgundy */
   --color-primary: #301728;
@@ -39,13 +39,13 @@
   /*--color-ring:  #13273F;*/
   --radius: 0.5rem;
   /*--color-fd-card: hsl(0 0% 100%);*/
-  --color-fd-card: #faf7f7;
+  --color-fd-card: #fafafa;
   /*--color-fd-secondary: hsl(0 0% 100%);*/
-  --color-fd-secondary: #faf7f7;
+  --color-fd-secondary: #fafafa;
   /*--color-fd-background: hsl(0 0% 100%);*/
-  --color-fd-background: #faf7f7;
+  --color-fd-background: #fafafa;
   /*--color-fd-popover: hsl(0 0% 100%);*/
-  --color-fd-popover: #faf7f7;
+  --color-fd-popover: #fafafa;
 }
 
 :root.dark {
@@ -53,12 +53,12 @@
   --color-background: #10080d;
   /*--color-background: #0a141f;*/
   --color-foreground: hsl(20 14.3% 4.1%);
-  --color-card: #faf7f7;
+  --color-card: #10080d;
   --color-card-foreground: hsl(20 14.3% 4.1%);
-  --color-popover: #faf7f7;
+  --color-popover: #10080d;
   --color-popover-foreground: hsl(20 14.3% 4.1%);
-  --color-primary: #faf7f7;
-  --color-primary-foreground: #faf7f7;
+  --color-primary: #fafafa;
+  --color-primary-foreground: #fafafa;
   /*--color-secondary: #563c4d;*/
   --color-secondary: #33202c;
   /*--color-secondary: #2c3c4d;*/

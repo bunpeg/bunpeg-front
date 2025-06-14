@@ -60,7 +60,7 @@ TableHead.displayName = 'TableHead'
 
 const TableCell = ({ className, ...props }: React.ComponentProps<'td'>) => (
   <td
-    className={cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', className)}
+    className={cn('p-4 align-middle', className)}
     {...props}
   />
 )

@@ -37,7 +37,9 @@ export default function TasksList() {
               {task.status === 'unreachable' && <CircleOffIcon className="size-4" />}
             </TableCell>
             <TableCell>{task.operation}</TableCell>
-            <TableCell>{task.args}</TableCell>
+            <TableCell>
+              {task.args}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
