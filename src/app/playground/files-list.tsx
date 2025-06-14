@@ -183,6 +183,22 @@ export default function FilesList() {
     onError,
   })
 
+  const { mutate: merge, isPending: isMerging } = useMutation<void, Error, { fileIds: string[]; outputFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/merge`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create add-audio task');
+      }
+    },
+    onSuccess,
+    onError,
+    onSettled: toggleSelection,
+  })
+
   const { mutate: chain, isPending: isChaining } = useMutation<void, Error, { fileId: string }, unknown>({
     mutationFn: async (params) => {
       const file = files.find((__file) => __file.id === params.fileId);
@@ -235,7 +251,8 @@ export default function FilesList() {
     isChaining ||
     isExtractingAudio ||
     isRemovingAudio ||
-    isAddingAudio;
+    isAddingAudio ||
+    isMerging;
 
   const resolveFormat = (fileName: string) => {
     const parts = fileName.split('.');
@@ -275,7 +292,15 @@ export default function FilesList() {
                     <FilePlus2Icon className="size-4 mr-2" />
                     Add audio
                   </DropdownMenuItem>
-                  <DropdownMenuItem disabled={isPending}>
+                  <DropdownMenuItem
+                    disabled={isPending}
+                    onClick={() => {
+                      merge({
+                        fileIds: selectedFiles.map((f) => f.id),
+                        outputFormat: resolveFormat(selectedFiles[0]!.file_name),
+                      });
+                    }}
+                  >
                     <CombineIcon className="size-4 mr-2" />
                     Merge files
                   </DropdownMenuItem>
