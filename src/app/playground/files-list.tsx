@@ -30,6 +30,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuSub,
@@ -229,6 +230,21 @@ export default function FilesList() {
     onError
   })
 
+  const { mutate: extractThumbnail, isPending: isExtracting } = useMutation<void, Error, { fileId: string; timestamp: string; imageFormat: string }, unknown>({
+    mutationFn: async (params) => {
+      const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/extract-thumbnail`, {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error('Unable to create extract-thumbnail task');
+      }
+    },
+    onSuccess,
+    onError,
+  })
+
   const { mutate: deleteFile, isPending: isDeleting } = useMutation<void, Error, string, unknown>({
     mutationFn: async (fileId) => {
       const response = await fetch(`${env.NEXT_PUBLIC_BUNPEG_API}/delete/${fileId}`, {
@@ -252,7 +268,8 @@ export default function FilesList() {
     isExtractingAudio ||
     isRemovingAudio ||
     isAddingAudio ||
-    isMerging;
+    isMerging ||
+    isExtracting;
 
   const resolveFormat = (fileName: string) => {
     const parts = fileName.split('.');
@@ -343,7 +360,11 @@ export default function FilesList() {
                       <TerminalIcon className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="min-w-40">
+                    <DropdownMenuLabel>ID: {file.id}</DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>Transcode</DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
@@ -363,7 +384,7 @@ export default function FilesList() {
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
                     </DropdownMenuSub>
-                    <DropdownMenuSeparator />
+
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>Trim</DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
@@ -414,7 +435,7 @@ export default function FilesList() {
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
                     </DropdownMenuSub>
-                    <DropdownMenuSeparator />
+
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>Audio</DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
@@ -436,20 +457,34 @@ export default function FilesList() {
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
                     </DropdownMenuSub>
+
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Other</DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem disabled={isPending}>
+                            <ScalingIcon className="size-4 mr-2" />
+                            Scale up/down
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
+                            <ChevronsRight className="size-4 mr-2" />
+                            Chain operations
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={isPending}
+                            onClick={() => {
+                              extractThumbnail({ fileId: file.id, timestamp: '10', imageFormat: 'png' });
+                            }}
+                          >
+                            <ImagePlusIcon className="size-4 mr-2" />
+                            Extract thumbnail
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem disabled={isPending} onClick={() => chain({ fileId: file.id })}>
-                      <ChevronsRight className="size-4 mr-2" />
-                      Chain operations
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={isPending}>
-                      <ImagePlusIcon className="size-4 mr-2" />
-                      Extract thumbnail
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled={isPending}>
-                      <ScalingIcon className="size-4 mr-2" />
-                      Scale up/down
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+
                     <a href={`${env.NEXT_PUBLIC_BUNPEG_API}/output/${file.id}`} target="_blank">
                       <DropdownMenuItem disabled={isPending}>
                         <ExternalLinkIcon className="size-4 mr-2" />
@@ -462,7 +497,9 @@ export default function FilesList() {
                         Download
                       </DropdownMenuItem>
                     </a>
+
                     <DropdownMenuSeparator />
+
                     <DropdownMenuItem onClick={() => deleteFile(file.id)} disabled={isPending}>
                       <Trash2Icon className="size-4 mr-2" />
                       Remove
