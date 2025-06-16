@@ -1,0 +1,21 @@
+---
+title: Best practices
+---
+
+1. Always check the file status after initiating an operation
+2. Use the chain operation when possible for multiple transformations to reduce network round-trips
+3. Delete files after use to free up storage
+4. Monitor file sizes to stay within the 500MB limit
+5. Choose appropriate output formats based on your needs:
+  - MP4: Best for web playback and compatibility
+  - WebM: Best for web with VP8/VP9 codec
+  - MKV: Best for quality preservation
+  - AVI: Legacy format, limited codec support
+6. For audio operations:
+  - Use AAC for best compatibility
+  - Use Opus for best quality/size ratio
+  - Use FLAC for lossless quality
+7. For video operations:
+  - Use copy codec when possible for faster processing
+  - Consider resolution and bitrate for optimal quality
+  - Use appropriate container format for your target platform

@@ -1,0 +1,23 @@
+---
+title: Merge videos
+---
+
+Merge multiple media files.
+
+```http
+POST /merge
+Content-Type: application/json
+
+{
+  "fileIds": ["string", "string"],
+  "outputFormat": "string"
+}
+```
+
+### Technical Details:
+- Automatically detects and matches resolution
+- Preserves aspect ratio with padding
+- Uses complex filter chain for proper concatenation
+- Output encoding:
+  - Video: H.264 (libx264) with fast preset, CRF 22
+  - Audio: AAC at 192kbps

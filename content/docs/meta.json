@@ -1,0 +1,9 @@
+{
+  "pages": [
+    "index",
+    "how-it-works",
+    "operations",
+    "best-practices",
+    "rate-limiting"
+  ]
+}
