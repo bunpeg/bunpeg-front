@@ -3,7 +3,7 @@ title: Resize
 ---
 
 Resize a video to different a size, even though the numbers used are the same as the resolution
-this does will not improve the resolution, so scaling a video will result in a bigger, pixelated image.
+this does not improve the resolution, so scaling a small res video will result in a bigger, pixelated video.
 
 ```http
 POST /resize-video
@@ -18,6 +18,7 @@ Content-Type: application/json
 ```
 
 ### Technical Details:
+- Swaps the files
 - Uses FFmpeg's scale filter
 - Maintains aspect ratio
 - Output is encoded with libx264 codec
