@@ -1,5 +1,6 @@
 import { type Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { ThemeProvider } from 'next-themes';
 
@@ -20,6 +21,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${font.className}`}>
+        <Analytics/>
         <ThemeProvider attribute="class" enableColorScheme>
           <RootProvider>
             <ClientProviders session={null}>
